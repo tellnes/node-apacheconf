@@ -1,0 +1,26 @@
+{
+  "name": "apacheconf",
+  "version": "0.0.0",
+  "description": "Apacheconf is an apache config file parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tellnes/node-apacheconf.git"
+  },
+  "author": "Christian Tellnes <christian@tellnes.no>",
+  "license": "MIT",
+  "dependencies": {
+    "event-stream": "~3.0.2",
+    "glob": "~3.1.12"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "apache",
+    "parser",
+    "config",
+    "httpd"
+  ]
+}
