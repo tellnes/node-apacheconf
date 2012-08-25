@@ -5,8 +5,6 @@ var inherits = require('util').inherits
   , fs = require('fs')
   , glob = require('glob')
 
-var colors = require('colors')
-
 function removeQuotes(str) {
   if ((str[0] == '"' && str[str.length - 1] == '"') || (str[0] == "'" && str[str.length - 1] == "'"))
     str = str.slice(1, str.length -1 )
