@@ -1,6 +1,6 @@
 {
   "name": "apacheconf",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Apacheconf is an apache config file parser",
   "main": "index.js",
   "scripts": {
