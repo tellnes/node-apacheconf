@@ -13,9 +13,16 @@ function removeQuotes(str) {
 }
 
 
-module.exports = function(filename, cb) {
+module.exports = function(filename, options, cb) {
+  if (arguments.length == 2) {
+    cb = options
+    options = {}
+  }
+
   var stream = fs.createReadStream(filename)
     , parser = new Parser()
+
+  parser.serverRoot = options.serverRoot || '/usr/local/apache'
 
   parser.file = filename
   parser._stream = es.pause()
@@ -135,7 +142,7 @@ Parser.prototype.write = function(line) {
 
       this.pause()
 
-      glob(value, function onfiles(err, files) {
+      glob(path.resolve(this._getProp('serverRoot'), value), function onfiles(err, files) {
         if (err) return self.emit('error', err)
 
         self._include(files.shift(), function(err) {
