@@ -34,6 +34,10 @@ module.exports = function(filename, options, cb) {
     parser.end()
   })
 
+  stream.on('error', function(err) {
+    parser.emit('error', err)
+  })
+
   if (cb) {
     parser.on('error', cb)
     parser.on('end', function() {
@@ -48,11 +52,6 @@ module.exports = function(filename, options, cb) {
 
 function setupPipeline(stream, parser) {
   stream.pipe(es.split('\n')).pipe(parser._stream).pipe(parser, { end: false })
-
-  stream.on('error', function(err) {
-    parser.emit('error', err)
-  })
-
 }
 
 
@@ -218,12 +217,15 @@ Parser.prototype._include = function(filename, cb) {
 
   setupPipeline(stream, self)
 
-  self._stream.on('end', function() {
+  function cleanup(err) {
     self._stream = origStream
     self.file = origFile
     self.lines = origLines
 
-    cb()
-  })
+    cb(err)
+  }
+
+  self._stream.on('end', cleanup)
+  stream.on('error', cleanup)
 
 }
