@@ -116,17 +116,7 @@ Parser.prototype.write = function(line) {
     line = line.slice(1, line.length - 1)
 
     child.name = line.split(' ', 1)[0]
-    child.args = removeQuotes(line.slice(child.name.length + 1))
-
-    switch(child.name) {
-    case 'VirtualHost':
-      line = child.args.split(':')
-      child.host = line[0]
-      child.port = line[1]
-      break
-
-    // TODO: Handle more types
-    }
+    child.config.$args = removeQuotes(line.slice(child.name.length + 1))
 
     break
 
