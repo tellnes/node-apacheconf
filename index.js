@@ -3,6 +3,7 @@ var inherits = require('util').inherits
   , Stream = require('stream').Stream
   , es = require('event-stream')
   , fs = require('fs')
+  , path = require('path')
   , glob = require('glob')
 
 function removeQuotes(str) {
@@ -141,13 +142,37 @@ Parser.prototype.write = function(line) {
 
       this.pause()
 
-      glob(path.resolve(this._getProp('serverRoot'), value), function onfiles(err, files) {
-        if (err) return self.emit('error', err)
+      glob(path.resolve(this._getProp('serverRoot'), value), function(err, files) {
 
-        self._include(files.shift(), function(err) {
-          if (err || files.length) return onfiles(err, files)
-          self.resume()
-        })
+        var current
+
+        function next(err) {
+          if (err) {
+            if (err.code == 'EISDIR') {
+              fs.readdir(current, function(err, _files) {
+                if (err) return next(err)
+
+                files = _files.map(function(file) {
+                  return path.resolve(current, file)
+                }).concat(files)
+
+                next()
+              })
+
+            } else {
+              self.emit('error', err)
+            }
+
+            return
+          }
+
+          if (!files.length) return self.resume()
+
+          current = files.shift()
+          self._include(current, next)
+        }
+
+        next(err)
 
       })
 
