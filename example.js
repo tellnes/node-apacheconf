@@ -5,7 +5,7 @@ apacheconf('/etc/apache2/httpd.conf', function(err, config, parser) {
 
   var domains = []
 
-  config.apacheconf.forEach(function(vh) {
+  config.VirtualHost.forEach(function(vh) {
     if (vh.ServerName) vh.ServerName.forEach(function(d) {
       domains.push(d)
     })
