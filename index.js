@@ -90,7 +90,7 @@ Parser.prototype.write = function(line) {
   switch(line[0]) {
   case '<':
     if (line[1] == '/') {
-      if (line != '</' + this.name + '>') {
+      if (line.toLowerCase() != '</' + this.name.toLowerCase() + '>') {
         this.emit('error', new ParseError(this, 'Expecting ' + this.name + ' close tag, got ' + line))
         return true
       }
