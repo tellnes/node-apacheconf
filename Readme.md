@@ -1,5 +1,7 @@
 # Apacheconf parser for Node.js
 
+[![Dependency Status](https://gemnasium.com/tellnes/node-apacheconf.png)](https://gemnasium.com/tellnes/node-apacheconf)
+
 Apacheconf is an apache config file parser for Node.js.
 
 
