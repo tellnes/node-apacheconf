@@ -5,6 +5,7 @@ var inherits = require('util').inherits
   , fs = require('fs')
   , path = require('path')
   , glob = require('glob')
+  , debug = require('debug')('apacheconf')
 
 function removeQuotes(str) {
   if ((str[0] == '"' && str[str.length - 1] == '"') || (str[0] == "'" && str[str.length - 1] == "'"))
@@ -95,6 +96,7 @@ Parser.prototype.write = function(line) {
         return true
       }
 
+      debug('[block] /%s', this.name)
       this.emit('end')
       return true
     }
@@ -125,9 +127,12 @@ Parser.prototype.write = function(line) {
     child.name = line.split(' ', 1)[0]
     child.config.$args = removeQuotes(line.slice(child.name.length + 1))
 
+    debug('[block] %s', child.name)
+
     break
 
   case '#':
+    debug('[comment] %s', line)
     this._comments.push(line)
     this.emit('comment', line)
     break
@@ -139,10 +144,12 @@ Parser.prototype.write = function(line) {
     switch(name) {
     case 'Include':
       var self = this
+        , filepath = path.resolve(this._getProp('serverRoot'), value)
 
       this.pause()
 
-      glob(path.resolve(this._getProp('serverRoot'), value), function(err, files) {
+      debug('[glob] %s', filepath)
+      glob(filepath, function(err, files) {
 
         var current
 
@@ -176,11 +183,13 @@ Parser.prototype.write = function(line) {
 
       })
 
+      debug('[add] %s: %s', name, value)
       this.add(name, value)
 
       break
 
     default:
+      debug('[add] %s: %s', name, value)
       this.add(name, value)
       break
     }
@@ -220,14 +229,17 @@ Parser.prototype._getProp = function(prop) {
 }
 
 Parser.prototype.pause = function() {
+  debug('[stream] pause')
   return this._getProp('_stream').pause()
 }
 
 Parser.prototype.resume = function() {
+  debug('[stream] resume')
   return this._getProp('_stream').resume()
 }
 
 Parser.prototype._include = function(filename, cb) {
+  debug('[include] %s', filename)
   this._getProp('files').push(filename)
 
   var self = this
