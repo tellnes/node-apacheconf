@@ -84,9 +84,20 @@ Parser.prototype.write = function(line) {
 
   if (this._child) return this._child.write(line)
 
+  if (this.multiline) {
+    line = this.multiline + ' ' + line
+    this.multiline = null
+  }
+
   line = line.trim()
 
   if (!line) return true
+
+  if (line[line.length - 1] === '\\' && line[line.length - 2] !== '\\') {
+    this.multiline = line.slice(0, line.length - 1)
+    return true
+  }
+
 
   switch(line[0]) {
   case '<':
