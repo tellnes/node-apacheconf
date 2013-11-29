@@ -135,7 +135,7 @@ Parser.prototype.write = function(line) {
 
     line = line.slice(1, line.length - 1)
 
-    child.name = line.split(' ', 1)[0]
+    child.name = line.split(/[ \t]/, 1)[0]
     child.config.$args = removeQuotes(line.slice(child.name.length + 1))
 
     debug('[block] %s', child.name)
@@ -149,7 +149,7 @@ Parser.prototype.write = function(line) {
     break
 
   default:
-    var name = line.split(' ', 1)[0]
+    var name = line.split(/[ \t]/, 1)[0]
       , value = line.slice(name.length + 1).trim()
 
     switch(name) {
